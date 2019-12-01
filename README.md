@@ -25,7 +25,9 @@ To start the server and lint a file, just run:
 
 ```bash
 # Prettier needs to know the file name to do its thing.
-$ cat file.js | prettier --stdin file.js
+$ cat file.js | prettier_d --stdin --stdin-filepath file.js
+# Or if you already have the content of the file:
+$ prettier_d --stdin-filepath file.js --text 'const foo = {}'
 ```
 
 On the initial call, the `prettier_d` server is launched and then the given file

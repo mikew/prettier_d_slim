@@ -4,6 +4,7 @@
 process.env.CORE_D_TITLE = 'prettier_d';
 process.env.CORE_D_DOTFILE = '.prettier_d';
 process.env.CORE_D_SERVICE = require.resolve('../lib/linter');
+console.log(require(process.env.CORE_D_SERVICE))
 
 function main() {
   const cmd = process.argv[2];

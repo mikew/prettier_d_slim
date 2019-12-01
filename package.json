@@ -28,7 +28,9 @@
     "url": "https://github.com/mantoni/eslint_d.js.git"
   },
   "dependencies": {
+    "camelize": "^1.0.0",
     "core_d": "^1.0.1",
+    "minimist": "^1.2.0",
     "nanolru": "^1.0.0",
     "prettier": "^1.19.1",
     "resolve": "^1.8.1"
@@ -44,8 +46,18 @@
     "@sinonjs/referee-sinon": "^5.0.0",
     "@studio/changes": "^1.7.0",
     "@studio/eslint-config": "^1.0.2",
+    "@types/minimist": "^1.2.0",
+    "@types/node": "^12.12.14",
+    "@types/prettier": "^1.19.0",
+    "@types/resolve": "0.0.8",
+    "@typescript-eslint/eslint-plugin": "^2.9.0",
+    "@typescript-eslint/parser": "^2.9.0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-simple-import-sort": "^5.0.0",
     "mocha": "^6.2.0",
     "mocha-referee-sinon": "^1.0.0",
+    "typescript": "^3.7.2",
     "winston": "^3.2.1"
   }
 }
