@@ -1,12 +1,8 @@
 # prettier_d
 
-<!-- [![Build Status]](https://travis-ci.org/mantoni/eslint_d.js) -->
-<!-- [![SemVer]](http://semver.org) -->
-<!-- [![License]](https://github.com/mantoni/eslint\_d.js/blob/master/LICENSE) -->
-
 Makes [prettier][] fast.
 
-## "But eslint is pretty fast already, right?"
+## "But prettier is pretty fast already, right?"
 
 Yes, it's really fast. But the node.js startup time and loading all the
 required modules slows down linting times for a single file to ~700
