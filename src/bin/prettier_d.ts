@@ -1,26 +1,11 @@
 #!/usr/bin/env node
 
-import winston from 'winston'
-
 process.env.CORE_D_TITLE = 'prettier_d'
 process.env.CORE_D_DOTFILE = '.prettier_d'
 process.env.CORE_D_SERVICE = require.resolve('../linter')
 
 // Needs to be imported after env vars are set.
 import coreD from 'core_d'
-
-const logger = winston.createLogger({
-  level: 'debug',
-  format: winston.format.combine(
-    winston.format.splat(),
-    winston.format.simple(),
-  ),
-  transports: [
-    new winston.transports.File({ filename: '/tmp/prettier_d.log' }),
-  ],
-})
-
-logger.debug('hello from prettier_d.js?')
 
 function main() {
   const cmd = process.argv[2]

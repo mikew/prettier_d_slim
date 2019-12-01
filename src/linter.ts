@@ -7,21 +7,8 @@ import minimist from 'minimist'
 import LRU from 'nanolru'
 import { Options } from 'prettier'
 import resolve from 'resolve'
-import winston from 'winston'
 
 const prettierCache = new LRU<CacheInstance>(10)
-const logger = winston.createLogger({
-  level: 'debug',
-  format: winston.format.combine(
-    winston.format.splat(),
-    winston.format.simple(),
-  ),
-  transports: [
-    new winston.transports.File({ filename: '/tmp/prettier_d.log' }),
-  ],
-})
-
-logger.debug('hello? %j', process.argv)
 
 function createCache(cwd: string) {
   let prettierPath
@@ -143,18 +130,12 @@ export const invoke = function(
   }
   cache.lastRun = Date.now()
 
-  logger.debug('args: %j', args)
-  logger.debug('cache.options: %j', cache.options)
-  logger.debug('hasConfig: %j', cache.hasConfig)
-
   // Skip if there is no prettier config.
   if (!cache.hasConfig) {
     return text
   }
 
   const parsedOptions = parseArguments(args)
-  logger.debug('parsedOptions: %j', parsedOptions)
-
   const filePath = parsedOptions.filepath
 
   const fileInfo = cache.prettier.getFileInfo.sync(filePath, {
@@ -162,8 +143,6 @@ export const invoke = function(
     pluginSearchDirs: parsedOptions.pluginSearchDir,
     plugins: parsedOptions.plugin,
   })
-
-  logger.debug('fileInfo: %j', fileInfo)
 
   // Skip if file is ignored.
   if (fileInfo.ignored) {
@@ -183,8 +162,6 @@ export const invoke = function(
   if (parsedOptions.stdin && parsedOptions.filepath) {
     options.filepath = parsedOptions.filepath
   }
-
-  logger.debug('formatting %s with %j', filePath, options)
 
   return cache.prettier.format(parsedOptions.text || text, options)
 }
