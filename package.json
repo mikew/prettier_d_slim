@@ -1,8 +1,8 @@
 {
-  "name": "prettier_d",
+  "name": "prettier_d_slim",
   "version": "1.0.0",
   "description": "Makes prettier fast",
-  "bin": "./lib/bin/prettier_d.js",
+  "bin": "./lib/bin/prettier_d_slim.js",
   "keywords": [
     "prettier",
     "daemon"
@@ -10,9 +10,6 @@
   "author": "Mike Wyatt <wyatt.mike@gmail.com>",
   "contributors": [],
   "homepage": "https://github.com/mikew/prettier_d.js",
-  "eslintConfig": {
-    "extends": "@studio"
-  },
   "scripts": {
     "test": "mocha --file ./node_modules/mocha-referee-sinon",
     "watch": "mocha --watch",
@@ -25,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mantoni/eslint_d.js.git"
+    "url": "https://github.com/mikew/prettier_d_slim.js.git"
   },
   "dependencies": {
     "camelize": "^1.0.0",

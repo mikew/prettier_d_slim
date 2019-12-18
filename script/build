@@ -5,4 +5,4 @@ set -ex
 
 rm -rf ./lib
 ./node_modules/.bin/tsc --project tsconfig.json
-chmod +x lib/bin/prettier_d.js
+chmod +x lib/bin/prettier_d_slim.js
