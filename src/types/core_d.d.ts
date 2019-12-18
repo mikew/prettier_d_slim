@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace CoreDClient {
   export function start(): void
   export function stop(): void

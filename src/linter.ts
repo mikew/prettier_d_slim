@@ -1,5 +1,3 @@
-'use strict'
-
 import path from 'path'
 
 import camelize from 'camelize'
