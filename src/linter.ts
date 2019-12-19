@@ -88,7 +88,20 @@ function parseArguments(args: string[]) {
         'vue-indent-script-and-style': false,
         'end-of-line': 'auto',
       },
-    }),
+    }) as Options & {
+      // Added by prettier_d_slim.
+      stdin?: boolean
+      stdinFilepath?: string
+      // Alternate way of passing text
+      text?: string
+      // Colon separated string.
+      pluginSearchDir?: string
+      // Colon separated string.
+      plugin?: string
+
+      // Used in prettier cli.
+      configPrecedence?: string
+    },
   )
 
   if (parsedOptions.stdinFilepath) {
@@ -136,10 +149,16 @@ export const invoke = function(
   const parsedOptions = parseArguments(args)
   const filePath = parsedOptions.filepath
 
+  if (!filePath) {
+    throw new Error('set filePath with `--stdin-filepath`')
+  }
+
   const fileInfo = cache.prettier.getFileInfo.sync(filePath, {
     ignorePath: cache.ignorePath,
-    pluginSearchDirs: parsedOptions.pluginSearchDir,
-    plugins: parsedOptions.plugin,
+    pluginSearchDirs: parsedOptions.pluginSearchDir
+      ? parsedOptions.pluginSearchDir.split(':')
+      : undefined,
+    plugins: parsedOptions.plugin ? parsedOptions.plugin.split(':') : undefined,
   })
 
   // Skip if file is ignored.
