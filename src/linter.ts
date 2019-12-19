@@ -61,7 +61,7 @@ function parseArguments(args: string[]) {
         'config',
         'editorconfig',
 
-        // Added by prettier_d.
+        // Added by prettier_d_slim.
         'color',
         'stdin',
       ],

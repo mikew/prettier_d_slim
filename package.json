@@ -9,7 +9,7 @@
   ],
   "author": "Mike Wyatt <wyatt.mike@gmail.com>",
   "contributors": [],
-  "homepage": "https://github.com/mikew/prettier_d.js",
+  "homepage": "https://github.com/mikew/prettier_d_slim",
   "scripts": {
     "test": "mocha --file ./node_modules/mocha-referee-sinon",
     "watch": "mocha --watch",
