@@ -108,6 +108,10 @@ function parseArguments(args: string[]) {
     parsedOptions.filepath = parsedOptions.stdinFilepath
   }
 
+  if (parsedOptions.configPrecedence == null) {
+    parsedOptions.configPrecedence = 'file-override'
+  }
+
   return parsedOptions
 }
 
@@ -163,11 +167,6 @@ export const invoke = function(
   }
 
   let options: Options = {}
-
-  if (parsedOptions.configPrecedence == null) {
-    parsedOptions.configPrecedence = 'file-override'
-  }
-
   switch (parsedOptions.configPrecedence) {
     case 'cli-override':
       options = Object.assign({}, cache.options, parsedOptions)
