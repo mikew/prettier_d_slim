@@ -14,7 +14,6 @@ module.exports = {
     // disables rules that prettier fixes.
     // others disable rules that common eslint configs set.
     'prettier',
-    'prettier/@typescript-eslint',
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -28,7 +27,7 @@ module.exports = {
         typedefs: false,
       },
     ],
-    'simple-import-sort/sort': [
+    'simple-import-sort/imports': [
       'warn',
       {
         groups: [
@@ -36,6 +35,7 @@ module.exports = {
           ['^\\u0000'],
 
           // Node.js builtins.
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
           [`^(${require('module').builtinModules.join('|')})(/|$)`],
 
           // Packages.
@@ -55,5 +55,6 @@ module.exports = {
       },
     ],
     // '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
 }

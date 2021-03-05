@@ -2,7 +2,9 @@
   "name": "prettier_d_slim",
   "version": "1.0.0",
   "description": "Makes prettier fast",
-  "bin": "./lib/bin/prettier_d_slim.js",
+  "bin": {
+    "prettier_d_slim": "lib/bin/prettier_d_slim.js"
+  },
   "keywords": [
     "prettier",
     "daemon"
@@ -10,26 +12,17 @@
   "author": "Mike Wyatt <wyatt.mike@gmail.com>",
   "contributors": [],
   "homepage": "https://github.com/mikew/prettier_d_slim",
-  "scripts": {
-    "test": "mocha --file ./node_modules/mocha-referee-sinon",
-    "watch": "mocha --watch",
-    "lint": "eslint . --ignore-pattern '**/node_modules/**'",
-    "posttest": "npm run lint",
-    "prepare": "cd test/fixture/v4.0.x && npm i && cd ../v5.0.x && npm i && cd ../v6.0.x && npm i",
-    "preversion": "npm test",
-    "version": "changes --commits --footer",
-    "postversion": "git push --follow-tags && npm publish"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/mikew/prettier_d_slim.js.git"
   },
   "dependencies": {
     "camelize": "^1.0.0",
-    "core_d": "^1.0.1",
+    "core_d": "^3.0.0",
     "minimist": "^1.2.0",
     "nanolru": "^1.0.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.2.1",
     "resolve": "^1.8.1"
   },
   "files": [
@@ -40,20 +33,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@sinonjs/referee-sinon": "^5.0.0",
-    "@studio/changes": "^1.7.0",
-    "@studio/eslint-config": "^1.0.2",
     "@types/minimist": "^1.2.0",
-    "@types/node": "^12.12.14",
-    "@types/prettier": "^1.19.0",
-    "@types/resolve": "0.0.8",
-    "@typescript-eslint/eslint-plugin": "^2.9.0",
-    "@typescript-eslint/parser": "^2.9.0",
-    "eslint": "^6.7.2",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-simple-import-sort": "^5.0.0",
-    "mocha": "^6.2.0",
-    "mocha-referee-sinon": "^1.0.0",
-    "typescript": "^3.7.2"
+    "@types/node": "^14.14.31",
+    "@types/prettier": "^2.2.2",
+    "@types/resolve": "^1.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "typescript": "^4.2.3"
   }
 }
