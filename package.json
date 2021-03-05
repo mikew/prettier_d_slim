@@ -2,7 +2,9 @@
   "name": "prettier_d_slim",
   "version": "1.0.0",
   "description": "Makes prettier fast",
-  "bin": "./lib/bin/prettier_d_slim.js",
+  "bin": {
+    "prettier_d_slim": "lib/bin/prettier_d_slim.js"
+  },
   "keywords": [
     "prettier",
     "daemon"
@@ -10,16 +12,7 @@
   "author": "Mike Wyatt <wyatt.mike@gmail.com>",
   "contributors": [],
   "homepage": "https://github.com/mikew/prettier_d_slim",
-  "scripts": {
-    "test": "mocha --file ./node_modules/mocha-referee-sinon",
-    "watch": "mocha --watch",
-    "lint": "eslint . --ignore-pattern '**/node_modules/**'",
-    "posttest": "npm run lint",
-    "prepare": "cd test/fixture/v4.0.x && npm i && cd ../v5.0.x && npm i && cd ../v6.0.x && npm i",
-    "preversion": "npm test",
-    "version": "changes --commits --footer",
-    "postversion": "git push --follow-tags && npm publish"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/mikew/prettier_d_slim.js.git"
@@ -40,9 +33,6 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "@sinonjs/referee-sinon": "^5.0.0",
-    "@studio/changes": "^1.7.0",
-    "@studio/eslint-config": "^1.0.2",
     "@types/minimist": "^1.2.0",
     "@types/node": "^12.12.14",
     "@types/prettier": "^1.19.0",
@@ -52,8 +42,6 @@
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-simple-import-sort": "^5.0.0",
-    "mocha": "^6.2.0",
-    "mocha-referee-sinon": "^1.0.0",
     "typescript": "^3.7.2"
   }
 }
