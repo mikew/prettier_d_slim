@@ -10,20 +10,6 @@ import coreD from 'core_d'
 function main() {
   const cmd = process.argv[2]
 
-  if (cmd === '-v' || cmd === '--version') {
-    console.log(
-      'v%s (prettier_d_slim v%s)',
-      require('prettier/package.json').version,
-      require('../package.json').version,
-    )
-
-    return
-  }
-
-  if (cmd === '-h' || cmd === '--help') {
-    return
-  }
-
   if (
     cmd === 'start' ||
     cmd === 'stop' ||
