@@ -101,12 +101,13 @@ declare module 'prettier' {
 /**
  * The core_d service entry point.
  */
-export const invoke = function(
+export const invoke = (
   cwd: string,
   args: string[],
   text: string,
   mtime: number,
-) {
+  callback: (output: string) => void,
+) => {
   process.chdir(cwd)
 
   let cache = prettierCache.get(cwd)
@@ -120,7 +121,8 @@ export const invoke = function(
 
   // Skip if there is no prettier config.
   if (!cache.hasConfig) {
-    return text
+    callback(text)
+    return
   }
 
   const parsedOptions = parseArguments(args)
@@ -140,7 +142,8 @@ export const invoke = function(
 
   // Skip if file is ignored.
   if (fileInfo.ignored) {
-    return text
+    callback(text)
+    return
   }
 
   let options: Options = {}
@@ -157,7 +160,7 @@ export const invoke = function(
     options.filepath = parsedOptions.filepath
   }
 
-  return cache.prettier.format(parsedOptions.text || text, options)
+  callback(cache.prettier.format(parsedOptions.text || text, options))
 }
 
 export const cache = prettierCache
@@ -165,7 +168,7 @@ export const cache = prettierCache
 /**
  * The core_d status hook.
  */
-export const getStatus = function() {
+export const getStatus = () => {
   const { keys } = prettierCache
   if (keys.length === 0) {
     return 'No instances cached.'
