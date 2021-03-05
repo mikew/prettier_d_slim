@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "camelize": "^1.0.0",
-    "core_d": "^1.0.1",
+    "core_d": "^3.0.0",
     "minimist": "^1.2.0",
     "nanolru": "^1.0.0",
-    "prettier": "^1.19.1",
+    "prettier": "^2.2.1",
     "resolve": "^1.8.1"
   },
   "files": [
@@ -34,14 +34,14 @@
   "license": "MIT",
   "devDependencies": {
     "@types/minimist": "^1.2.0",
-    "@types/node": "^12.12.14",
-    "@types/prettier": "^1.19.0",
-    "@types/resolve": "0.0.8",
-    "@typescript-eslint/eslint-plugin": "^2.9.0",
-    "@typescript-eslint/parser": "^2.9.0",
-    "eslint": "^6.7.2",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-simple-import-sort": "^5.0.0",
-    "typescript": "^3.7.2"
+    "@types/node": "^14.14.31",
+    "@types/prettier": "^2.2.2",
+    "@types/resolve": "^1.20.0",
+    "@typescript-eslint/eslint-plugin": "^4.16.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "typescript": "^4.2.3"
   }
 }
