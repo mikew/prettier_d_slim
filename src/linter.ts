@@ -69,41 +69,43 @@ function clearRequireCache(cwd: string) {
     })
 }
 
+function validateNoCliOptions(options: minimist.ParsedArgs) {
+  return Object.entries(options).reduce((acc, [key, val]) => {
+    if (key.startsWith('no-')) {
+      if (val === true) {
+        acc[key.replace(/^no-/, '')] = false
+      }
+    } else {
+      acc[key] = val
+    }
+    return acc
+  }, {} as minimist.ParsedArgs)
+}
+
 function parseArguments(args: string[]) {
-  const parsedOptions = camelize(
-    minimist(args, {
-      boolean: [
-        'use-tabs',
-        'semi',
-        'single-quote',
-        'jsx-single-quote',
-        'bracket-spacing',
-        'jsx-bracket-same-line',
-        'require-pragma',
-        'insert-pragma',
-        'vue-indent-script-and-style',
-        'config',
-        'editorconfig',
+  const rawOptions = minimist(args, {
+    boolean: [
+      'config',
+      'editorconfig',
+      'insert-pragma',
+      'jsx-bracket-same-line',
+      'jsx-single-quote',
+      'no-bracket-spacing',
+      'no-semi',
+      'require-pragma',
+      'single-quote',
+      'use-tabs',
+      'vue-indent-script-and-style',
 
-        // Added by prettier_d_slim.
-        'color',
-        'stdin',
-      ],
-    }) as Options & {
       // Added by prettier_d_slim.
-      stdin?: boolean
-      stdinFilepath?: string
-      // Alternate way of passing text
-      text?: string
-      // Colon separated string.
-      pluginSearchDir?: string
-      // Colon separated string.
-      plugin?: string
+      'color',
+      'stdin',
+    ],
+  })
 
-      // Used in prettier cli.
-      configPrecedence?: string
-    },
-  )
+  const parsedOptions = camelize(
+    validateNoCliOptions(rawOptions),
+  ) as ParsedOptions
 
   if (parsedOptions.stdinFilepath) {
     parsedOptions.filepath = parsedOptions.stdinFilepath
@@ -132,6 +134,7 @@ export const invoke = (
   mtime: number,
   callback: (err: unknown, response: string) => void,
 ) => {
+  const parsedOptions = parseArguments(args)
   process.chdir(cwd)
 
   let cache = prettierCache.get(cwd)
