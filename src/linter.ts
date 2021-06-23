@@ -31,8 +31,9 @@ export type ParsedOptions = Options & {
 
 const prettierCache = new LRU<CacheInstance>(10)
 
-function createCache(cwd: string) {
+function createCache(cwd: string, filePath = cwd) {
   let prettierPath
+
   try {
     prettierPath = resolve.sync('prettier', { basedir: cwd })
   } catch (e) {
@@ -42,10 +43,10 @@ function createCache(cwd: string) {
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const prettier: CacheInstance['prettier'] = require(prettierPath)
-  const configPath = prettier.resolveConfigFile.sync(cwd)
+  const configPath = prettier.resolveConfigFile.sync(filePath)
   const ignorePath = path.join(cwd, '.prettierignore')
   const options =
-    prettier.resolveConfig.sync(cwd, {
+    prettier.resolveConfig.sync(filePath, {
       useCache: false,
       editorconfig: true,
     }) || {}
@@ -135,10 +136,10 @@ export const invoke = (
 
   let cache = prettierCache.get(cwd)
   if (!cache) {
-    cache = createCache(cwd)
+    cache = createCache(cwd, parsedOptions.filepath)
   } else if (mtime > (cache.lastRun || 0)) {
     clearRequireCache(cwd)
-    cache = createCache(cwd)
+    cache = createCache(cwd, parsedOptions.filepath)
   }
   cache.lastRun = Date.now()
 
