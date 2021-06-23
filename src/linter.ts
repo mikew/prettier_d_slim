@@ -6,6 +6,29 @@ import LRU from 'nanolru'
 import { Options } from 'prettier'
 import resolve from 'resolve'
 
+export interface CacheInstance {
+  hasConfig: boolean
+  ignorePath: string
+  options: Options
+  prettier: typeof import('prettier')
+  lastRun?: number
+}
+
+export type ParsedOptions = Options & {
+  // Added by prettier_d_slim.
+  stdin?: boolean
+  stdinFilepath?: string
+  // Alternate way of passing text
+  text?: string
+  // Colon separated string.
+  pluginSearchDir?: string
+  // Colon separated string.
+  plugin?: string
+
+  // Used in prettier cli.
+  configPrecedence?: string
+}
+
 const prettierCache = new LRU<CacheInstance>(10)
 
 function createCache(cwd: string) {
@@ -177,12 +200,4 @@ export const getStatus = () => {
     return 'One instance cached.'
   }
   return `${keys.length} instances cached.`
-}
-
-export interface CacheInstance {
-  hasConfig: boolean
-  ignorePath: string
-  options: Options
-  prettier: typeof import('prettier')
-  lastRun?: number
 }
