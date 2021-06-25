@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "camelize": "^1.0.0",
-    "core_d": "^3.0.0",
+    "core_d": "^3.2.0",
     "minimist": "^1.2.0",
     "nanolru": "^1.0.0",
     "prettier": "^2.2.1",
