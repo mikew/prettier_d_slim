@@ -6,10 +6,34 @@ import LRU from 'nanolru'
 import { Options } from 'prettier'
 import resolve from 'resolve'
 
+export interface CacheInstance {
+  hasConfig: boolean
+  ignorePath: string
+  options: Options
+  prettier: typeof import('prettier')
+  lastRun?: number
+}
+
+export type ParsedOptions = Options & {
+  // Added by prettier_d_slim.
+  stdin?: boolean
+  stdinFilepath?: string
+  // Alternate way of passing text
+  text?: string
+  // Colon separated string.
+  pluginSearchDir?: string
+  // Colon separated string.
+  plugin?: string
+
+  // Used in prettier cli.
+  configPrecedence?: string
+}
+
 const prettierCache = new LRU<CacheInstance>(10)
 
-function createCache(cwd: string) {
+function createCache(cwd: string, filePath = cwd) {
   let prettierPath
+
   try {
     prettierPath = resolve.sync('prettier', { basedir: cwd })
   } catch (e) {
@@ -19,13 +43,14 @@ function createCache(cwd: string) {
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const prettier: CacheInstance['prettier'] = require(prettierPath)
-  const configPath = prettier.resolveConfigFile.sync(cwd)
+  const configPath = prettier.resolveConfigFile.sync(filePath)
+
   const ignorePath = path.join(cwd, '.prettierignore')
   const options =
-    prettier.resolveConfig.sync(cwd, {
+    prettier.resolveConfig.sync(filePath, {
       useCache: false,
       editorconfig: true,
-    }) || {}
+    }) ?? {}
 
   const cacheInstance: CacheInstance = {
     prettier,
@@ -45,41 +70,43 @@ function clearRequireCache(cwd: string) {
     })
 }
 
+function validateNoCliOptions(options: minimist.ParsedArgs) {
+  return Object.entries(options).reduce((acc, [key, val]) => {
+    if (key.startsWith('no-')) {
+      if (val === true) {
+        acc[key.replace(/^no-/, '')] = false
+      }
+    } else {
+      acc[key] = val
+    }
+    return acc
+  }, {} as minimist.ParsedArgs)
+}
+
 function parseArguments(args: string[]) {
-  const parsedOptions = camelize(
-    minimist(args, {
-      boolean: [
-        'use-tabs',
-        'semi',
-        'single-quote',
-        'jsx-single-quote',
-        'bracket-spacing',
-        'jsx-bracket-same-line',
-        'require-pragma',
-        'insert-pragma',
-        'vue-indent-script-and-style',
-        'config',
-        'editorconfig',
+  const rawOptions = minimist(args, {
+    boolean: [
+      'config',
+      'editorconfig',
+      'insert-pragma',
+      'jsx-bracket-same-line',
+      'jsx-single-quote',
+      'no-bracket-spacing',
+      'no-semi',
+      'require-pragma',
+      'single-quote',
+      'use-tabs',
+      'vue-indent-script-and-style',
 
-        // Added by prettier_d_slim.
-        'color',
-        'stdin',
-      ],
-    }) as Options & {
       // Added by prettier_d_slim.
-      stdin?: boolean
-      stdinFilepath?: string
-      // Alternate way of passing text
-      text?: string
-      // Colon separated string.
-      pluginSearchDir?: string
-      // Colon separated string.
-      plugin?: string
+      'color',
+      'stdin',
+    ],
+  })
 
-      // Used in prettier cli.
-      configPrecedence?: string
-    },
-  )
+  const parsedOptions = camelize(
+    validateNoCliOptions(rawOptions),
+  ) as ParsedOptions
 
   if (parsedOptions.stdinFilepath) {
     parsedOptions.filepath = parsedOptions.stdinFilepath
@@ -106,26 +133,26 @@ export const invoke = (
   args: string[],
   text: string,
   mtime: number,
-  callback: (output: string) => void,
+  callback: (err: unknown, response: string) => void,
 ) => {
+  const parsedOptions = parseArguments(args)
   process.chdir(cwd)
 
   let cache = prettierCache.get(cwd)
   if (!cache) {
-    cache = createCache(cwd)
+    cache = createCache(cwd, parsedOptions.filepath)
   } else if (mtime > (cache.lastRun || 0)) {
     clearRequireCache(cwd)
-    cache = createCache(cwd)
+    cache = createCache(cwd, parsedOptions.filepath)
   }
   cache.lastRun = Date.now()
 
   // Skip if there is no prettier config.
   if (!cache.hasConfig) {
-    callback(text)
+    callback(null, text)
     return
   }
 
-  const parsedOptions = parseArguments(args)
   const filePath = parsedOptions.filepath
 
   if (!filePath) {
@@ -142,7 +169,7 @@ export const invoke = (
 
   // Skip if file is ignored.
   if (fileInfo.ignored) {
-    callback(text)
+    callback(null, text)
     return
   }
 
@@ -160,7 +187,10 @@ export const invoke = (
     options.filepath = parsedOptions.filepath
   }
 
-  callback(cache.prettier.format(parsedOptions.text || text, options))
+  callback(
+    null,
+    cache.prettier.format(parsedOptions.text ?? text, options),
+  )
 }
 
 export const cache = prettierCache
@@ -177,12 +207,4 @@ export const getStatus = () => {
     return 'One instance cached.'
   }
   return `${keys.length} instances cached.`
-}
-
-export interface CacheInstance {
-  hasConfig: boolean
-  ignorePath: string
-  options: Options
-  prettier: typeof import('prettier')
-  lastRun?: number
 }
