@@ -8,13 +8,14 @@ import resolve from 'resolve'
 
 const prettierCache = new LRU<CacheInstance>(10)
 
-function createCache(cwd: string) {
-  let prettierPath
-  try {
-    prettierPath = resolve.sync('prettier', { basedir: cwd })
-  } catch (e) {
-    // module not found
-    prettierPath = resolve.sync('prettier')
+function createCache(cacheKey: string, cwd: string, prettierPath?: string) {
+  if (prettierPath == null) {
+    try {
+      prettierPath = resolve.sync('prettier', { basedir: cwd })
+    } catch (e) {
+      // module not found
+      prettierPath = resolve.sync('prettier')
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,7 +35,7 @@ function createCache(cwd: string) {
     hasConfig: Boolean(configPath),
   }
 
-  return prettierCache.set(cwd, cacheInstance)
+  return prettierCache.set(cacheKey, cacheInstance)
 }
 
 function clearRequireCache(cwd: string) {
@@ -64,11 +65,13 @@ function parseArguments(args: string[]) {
         // Added by prettier_d_slim.
         'color',
         'stdin',
+        'prettier-path',
       ],
     }) as Options & {
       // Added by prettier_d_slim.
       stdin?: boolean
       stdinFilepath?: string
+      prettierPath?: string
       // Alternate way of passing text
       text?: string
       // Colon separated string.
@@ -110,12 +113,16 @@ export const invoke = (
 ) => {
   process.chdir(cwd)
 
-  let cache = prettierCache.get(cwd)
+  const parsedOptions = parseArguments(args)
+  const prettierPath = parsedOptions.prettierPath
+  const cacheKey = `${cwd};${parsedOptions.prettierPath || ''}`
+
+  let cache = prettierCache.get(cacheKey)
   if (!cache) {
-    cache = createCache(cwd)
+    cache = createCache(cacheKey, cwd, prettierPath)
   } else if (mtime > (cache.lastRun || 0)) {
     clearRequireCache(cwd)
-    cache = createCache(cwd)
+    cache = createCache(cacheKey, cwd, prettierPath)
   }
   cache.lastRun = Date.now()
 
@@ -125,7 +132,6 @@ export const invoke = (
     return
   }
 
-  const parsedOptions = parseArguments(args)
   const filePath = parsedOptions.filepath
 
   if (!filePath) {
