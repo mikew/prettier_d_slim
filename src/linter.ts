@@ -65,7 +65,6 @@ function parseArguments(args: string[]) {
         // Added by prettier_d_slim.
         'color',
         'stdin',
-        'prettier-path',
       ],
     }) as Options & {
       // Added by prettier_d_slim.
