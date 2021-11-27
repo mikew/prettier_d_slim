@@ -106,7 +106,7 @@ export const invoke = (
   args: string[],
   text: string,
   mtime: number,
-  callback: (output: string) => void,
+  callback: (err: unknown, output: string) => void,
 ) => {
   process.chdir(cwd)
 
@@ -121,7 +121,7 @@ export const invoke = (
 
   // Skip if there is no prettier config.
   if (!cache.hasConfig) {
-    callback(text)
+    callback(undefined, text)
     return
   }
 
@@ -142,7 +142,7 @@ export const invoke = (
 
   // Skip if file is ignored.
   if (fileInfo.ignored) {
-    callback(text)
+    callback(undefined, text)
     return
   }
 
@@ -160,7 +160,10 @@ export const invoke = (
     options.filepath = parsedOptions.filepath
   }
 
-  callback(cache.prettier.format(parsedOptions.text || text, options))
+  callback(
+    undefined,
+    cache.prettier.format(parsedOptions.text || text, options),
+  )
 }
 
 export const cache = prettierCache
