@@ -6,5 +6,6 @@
     "filepath",
     "nanolru",
     "prettierignore"
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
