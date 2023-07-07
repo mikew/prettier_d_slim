@@ -159,6 +159,9 @@ export const invoke = (
     case 'file-override':
       options = Object.assign({}, parsedOptions, cache.options)
       break
+    case 'prefer-file':
+      options = Object.assign({}, cache.options)
+      break
   }
 
   if (parsedOptions.stdin && parsedOptions.filepath) {
